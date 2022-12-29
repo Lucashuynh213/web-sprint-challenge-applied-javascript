@@ -1,3 +1,6 @@
+import axios from "axios";
+
+
 const Card = (article) => {
   // TASK 5
   // ---------------------
@@ -17,7 +20,39 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+
+  const newCard = document.createElement('div');
+  const headLine = document.createElement('div');
+  const auThor = document.createElement('div');
+  const imgContainer = document.createElement('div');
+  const image = document.createElement('img');
+  const span = document.createElement('span');
+ 
+  headLine.textContent = article.headline;
+  span.textContent = article.authorName;
+  image.src = article.authorPhoto;
+  image.alt = "author photo";
+
+  newCard.classList.add('card');
+  headLine.classList.add('headline');
+  auThor.classList.add('author');
+  imgContainer.classList.add('img-container');
+  image.classList.add('img');
+  span.classList.add('span');
+
+  newCard.appendChild(headLine);
+  newCard.appendChild(auThor);
+  auThor.appendChild(imgContainer);
+  imgContainer.appendChild(image);
+  auThor.appendChild(span);
+
+  newCard.addEventListener("click", () => {
+    newCard.classList.toggle("span");
+  })
+
+  return newCard;
 }
+console.log(Card({headline: 'headline', authorPhoto: 'authorPhoto', authorName: 'authorName'}));
 
 const cardAppender = (selector) => {
   // TASK 6
@@ -28,6 +63,32 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+  axios.get(`http://localhost:5001/api/articles`)
+
+  .then(resp => {
+
+    for(let i = 0; i < resp.data.articles.bootstrap.length; i++){
+document.querySelector(selector).appendChild(Card(resp.data.articles.bootstrap[i]));
+    }
+    for(let j = 0; j < resp.data.articles.javascript.length; j++){
+document.querySelector(selector).appendChild(Card(resp.data.articles.javascript[j]))
+    }
+    for(let k = 0; k < resp.data.articles.technology.length; k++){
+document.querySelector(selector).appendChild(Card(resp.data.articles.technology[k]))
+    }
+    for(let o = 0; o < resp.data.articles.jquery.length; o++){  document.querySelector(selector).appendChild(Card(resp.data.articles.jquery[o]))
+}
+    for(let y = 0; y < resp.data.articles.node.length; y++){
+document.querySelector(selector).appendChild(Card(resp.data.articles.node[y]))
+    }
+    console.log(resp.data.articles);
+// document.querySelector(selector).appendChild(Card(resp.data.articles.bootstrap[0]));
+  })
+  .catch(err => 
+    console.error(err))
+
+
+
 }
 
 export { Card, cardAppender }
